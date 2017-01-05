@@ -1,0 +1,60 @@
+﻿@model BlogApplication2.Models.BlogPost
+@using BlogApplication2.Models
+
+@{
+    ViewData["Title"] = "Ändra";
+    string styles = "width: 280px; border-radius: 4px; border: 1px solid #ccc; height: 34px;";
+}
+
+<h2>Redigera</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>@ViewData["Header"]</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="BlogPostID" />
+        <input type="hidden" asp-for="PublishDate" />
+        <input type="hidden" asp-for="UserID" />
+
+        <div class="form-group">
+            <label class="col-md-2 control-label h4">Rubrik</label>
+            <div class="col-md-10">
+                <input asp-for="HeaderText" class="form-control" id="HeaderTextArea" onkeyup="TextCounter(this)" style="width:100%" />
+                <span asp-validation-for="HeaderText" class="text-danger"></span>
+                <span id="headerCharCountLabel"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label h4">@ViewData["BreadText"]</label>
+            <div class="col-md-10">
+                <textarea asp-for="BodyText" id="BodyTextArea" class="form-control" onkeyup="TextCounter2(this)" style="width:100%"> </textarea>
+                <span asp-validation-for="BodyText" class="text-danger"></span>
+                <span id="bodyCharCountLabel" class="pull-right"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label h4">Kategori</label>
+            <div class="col-md-10">
+                @{
+                    @Html.DropDownListFor(model => model.CategoryName, new SelectList(ViewBag.categories), new { style = styles })
+                    <span asp-validation-for="CategoryName" class="text-danger" />
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Spara" class="btn btn-default" id="submitButton" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Tillbaka</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

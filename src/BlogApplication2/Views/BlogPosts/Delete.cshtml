@@ -1,0 +1,40 @@
+﻿@model BlogApplication2.Models.BlogPost
+
+@{
+    ViewData["Title"] = "Ta bort";
+    string date = Model.PublishDate.ToString("d MMM yyyy");
+
+}
+
+<h2>Ta bort recept</h2>
+<div>
+    <h4>Du är nu på väg att radera ett inlägg. Denna åtgärd kan inte ångras!</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Namn
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HeaderText)
+        </dd>
+        <dt>
+            Kategori
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CategoryName)
+        </dd>
+        <dt>
+            Publicerad
+        </dt>
+        <dd>
+            @date
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Ta bort" class="btn btn-danger" /> |
+            <a asp-action="Index">Avbryt</a>
+        </div>
+    </form>
+</div>

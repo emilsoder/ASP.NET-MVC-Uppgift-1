@@ -1,0 +1,255 @@
+﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="~/css/w3Styles.css" rel="stylesheet" />
+
+<style>
+
+</style>
+
+
+@model IEnumerable<BlogApplication2.Models.BlogPost>
+@using BlogApplication2.Models
+
+@{
+    ViewData["Title"] = "Blogg";
+    int i = 0;
+}
+
+@using (Html.BeginForm())
+{
+    <div>
+        <p class="pull-right">
+            @Html.TextBox("SearchString", "Sök")
+            <button class="btn glyphicon glyphicon-search pull-right" id="searchButton" type="submit" data-toggle="tooltip" title="Hitta"></button>
+            <h2>Recept</h2>
+        </p>
+    </div>
+}
+<p><a asp-action="Create" class="w3-btn w3-white w3-border w3-border-green w3-hover-green" id="createNewPost">Nytt recept</a></p>
+<hr />
+<div class="container-fluid text-left">
+    <div class="row content">
+        <div class="container" id="rowContentContainer">
+            <div type="button" id="mobileCategoriesMenuButton" class="w3-btn w3-ripple w3-teal w3-btn-block" data-toggle="collapse" data-target="#mobileCategoriesMenu">
+                Kategorier
+                <span class="caret" id="mobileCaret"></span>
+            </div>
+            <div id="mobileCategoriesMenu" class="">
+                <div class="w3-btn-group text-center">
+                    <div id="categoriesCollection" class="" data-toggle="">
+                        <a asp-action="Index" asp-route-categoryName="all" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-sortOrder="@ViewData["SortOrder"]">
+                            <div type="button" class="w3-btn w3-blue-grey w3-hover-blue onn" id="CategoryButton">
+                                Visa alla <span class="w3-badge w3-margin-left">@ViewBag.AllPostsCount</span>
+                            </div>
+                        </a>
+                        @foreach (var item in ViewBag.categories)
+                        {
+                            <a asp-action="Index" asp-route-categoryName="@item.categoryName" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-sortOrder="@ViewData["SortOrder"]">
+                                <div type="button" class="w3-btn w3-blue-grey w3-hover-blue onn" id="CategoryButton">
+                                    @item.categoryName
+                                    <span class="w3-badge w3-margin-left">@item.count</span>
+                                </div>
+                            </a>
+                        }
+                        @foreach (var item in ViewBag.AllCategories)
+                        {
+                            <a asp-action="Index" asp-route-categoryName="@item.categoryName" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-sortOrder="@ViewData["SortOrder"]">
+                                <div type="button" class="w3-btn w3-blue-grey w3-hover-blue onn" id="CategoryButton">
+                                    @item.categoryName
+                                    <span class="w3-badge w3-margin-left">@item.count</span>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if ((ViewData["CategoryName"] != null) && (ViewData["CategoryName"].ToString() != "all"))
+            {
+            <h2 id="categoryNameHeader">@ViewData["CategoryName"]</h2>
+        }
+        @if (Model.Count() != 0)
+        {
+            <div class="row center-block">
+                <div class="row center-block">
+                    <hr />
+                    <div class="text-left sortListLabel">Visa som:</div>
+                    <div class="w3-dropdown-hover">
+                        <button class="w3-btn w3-white w3-border">
+                            <text id="viewTypeText">Visa som</text>
+                            <span class="caret"></span>
+                        </button>
+                        <div class="w3-dropdown-content w3-border" id="sortDropdown">
+                            <a asp-action="Index" asp-route-viewType="list" asp-route-categoryName="@ViewData["CategoryName"]" asp-route-sortOrder="@ViewData["SortOrder"]">Lista</a>
+                            <a asp-action="Index" asp-route-viewType="grid" asp-route-categoryName="@ViewData["CategoryName"]" asp-route-sortOrder="@ViewData["SortOrder"]">Hela inlägg</a>
+                        </div>
+                    </div>
+                    <div class="w3-dropdown-hover pull-right w3-right">
+                        <button class="w3-btn w3-white w3-border">
+                            <text id="sortOrderText">Sortera</text>
+                            <span class="caret"></span>
+                        </button>
+                        <div class="w3-dropdown-content w3-border w3-right" id="sortDropdownRight">
+                            <a asp-action="Index" asp-route-sortOrder="date_desc" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-categoryName="@ViewData["CategoryName"]">Nyast först</a>
+                            <a asp-action="Index" asp-route-sortOrder="date_asc" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-categoryName="@ViewData["CategoryName"]">Äldst först</a>
+                        </div>
+                    </div>
+                    <div class="text-right sortListLabel">Sortera efter:</div>
+                </div>
+            </div>
+        }
+        @if (Model.Count() == 0)
+        {
+            string nullDescription = "Det finns ännu inga recept i denna kategorin.";
+            if (User.Identity.IsAuthenticated)
+            {
+                <div id="NoItemsInCategoryPanel">
+                    <p class="h5 text-center">
+                        @nullDescription
+                        <br />
+                        <br />
+                        Klicka på <a asp-action="Create" class="btn btn-default btn-xs">Nytt recept</a> för att dela med dig av dina favoritrecept inom kategorin @ViewData["CategoryName"]!
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div id="NoItemsInCategoryPanel">
+                    <p class="h5 text-center">
+                        @nullDescription
+                        <br />
+                        <br />
+                        <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-default btn-xs">Logga in</a>
+                        eller <a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-default btn-xs">Registrera dig</a>
+                        för att lägga till nya!
+                    </p>
+                </div>
+            }
+        }
+        @if ((ViewData["DisplayResultsAs"].ToString() == "grid") && (Model != null))
+            {
+            @foreach (var item in Model)
+                {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <div class="row" id="HeaderRow">
+                            <div class="col-xs-8">
+                                @Html.DisplayFor(modelItem => item.HeaderText)
+                            </div>
+                            <div class="col-xs-4">
+                                @Html.DisplayFor(modelItem => item.PublishDate)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body panelBodyText">
+                        <pre>@Html.DisplayFor(modelItem => item.BodyText)</pre>
+                    </div>
+                    <div class="panel-footer">
+                        <a asp-action="Index" asp-route-categoryName="@item.CategoryName" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-sortOrder="@ViewData["SortOrder"]">
+                            <div class="w3-btn w3-blue-grey w3-hover-blue">@Html.DisplayFor(modelItem => item.CategoryName)</div>
+                        </a>
+                        @if (((User.Identity.Name == item.UserID) || (User.IsInRole("Admin"))) && User.Identity.IsAuthenticated == true)
+                        {
+                            <div class="w3-dropdown-hover pull-right w3-right">
+                                <button class="w3-btn w3-white w3-border" id="editPostToolsDropDownButton">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <div class="w3-dropdown-content w3-border w3-right" id="editPostToolsDropDown">
+                                    <a asp-action="Edit" asp-route-id="@item.BlogPostID">Redigera</a>
+                                    <a asp-action="Delete" asp-route-id="@item.BlogPostID">Ta bort</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <hr />
+            }
+        }
+        <div class="panel-group" id="accordion">
+            @if ((ViewData["DisplayResultsAs"].ToString() == "list") && (Model != null))
+            {
+                foreach (var item in Model)
+                {
+                    i++;
+                    string htmlCollapse = "#collapse" + i;
+                    string htmlCollapseId = "collapse" + i;
+                    string panelID = "panel" + i;
+                    <div class="panel panel-default" id="@panelID">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="@htmlCollapse">
+                            <div class="row" id="HeaderRow">
+                                <div class="col-xs-8">
+                                    @Html.DisplayFor(modelItem => item.HeaderText)
+                                </div>
+                                <div class="col-xs-4">
+                                    @Html.DisplayFor(modelItem => item.PublishDate)
+                                </div>
+                            </div>
+                        </div>
+                        <div id="@htmlCollapseId" class="panel-collapse collapse">
+                            <div class="panel-body panelBodyText">
+                                <pre>@Html.DisplayFor(modelItem => item.BodyText)</pre>
+                            </div>
+                            <div class="panel-footer">
+                                <a asp-action="Index" asp-route-categoryName="@item.CategoryName" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-sortOrder="@ViewData["SortOrder"]">
+                                    <div class="w3-btn w3-blue-grey w3-hover-blue">@Html.DisplayFor(modelItem => item.CategoryName)</div>
+                                </a>
+                                @if (((User.Identity.Name == item.UserID) || (User.IsInRole("Admin"))) && User.Identity.IsAuthenticated == true)
+                                {
+                                    <div class="w3-dropdown-hover pull-right w3-right">
+                                        <button class="w3-btn w3-white w3-border" id="editPostToolsDropDownButton">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <div class="w3-dropdown-content w3-border w3-right" id="editPostToolsDropDown">
+                                            <a asp-action="Edit" asp-route-id="@item.BlogPostID">Redigera</a>
+                                            <a asp-action="Delete" asp-route-id="@item.BlogPostID">Ta bort</a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@{
+    if (ViewData["SortOrder"].ToString() == "date_desc")
+    {
+        <script>
+            $(document).ready(function () {
+                $('#sortOrderText').text("Nyast först");
+
+            });
+        </script>
+    }
+    else
+    {
+        <script>
+            $(document).ready(function () {
+                $('#sortOrderText').text("Äldst först");
+            });
+        </script>
+    }
+    if (ViewData["DisplayResultsAs"].ToString() == "list")
+    {
+        <script>
+            $(document).ready(function () {
+                $('#viewTypeText').text("Lista");
+
+            });
+        </script>
+    }
+    else
+    {
+        <script>
+            $(document).ready(function () {
+                $('#viewTypeText').text("Hela inlägg");
+            });
+        </script>
+    }
+}
+

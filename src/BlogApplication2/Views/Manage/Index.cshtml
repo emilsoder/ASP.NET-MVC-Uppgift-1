@@ -1,0 +1,148 @@
+﻿@model IEnumerable<BlogApplication2.Models.BlogPost>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="~/css/w3Styles.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "Mina sidor";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Meddelande
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-success h4">@ViewData["StatusMessage"]</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default " data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@if (ViewData["StatusMessage"].ToString() != "")
+{
+    <script>
+        $(document).ready(function () {
+            $("#myModal").modal()
+        });
+    </script>
+}
+
+<div>
+    <h4>Välkommen, @User.Identity.Name!</h4>
+    <hr />
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" href="#AccountSettings">
+                <h4 class="panel-title h4">
+                    <a data-toggle="collapse" href="#AccountSettings">Kontoinställningar</a>
+                </h4>
+            </div>
+            <div id="AccountSettings" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <b> Lösenord:</b>
+                    <a asp-controller="Manage" asp-action="ChangePassword" class="btn btn-default btn-xs">Ändra</a>
+                </div>
+
+                <div class="panel-body">
+                    <b>Användarnamn:</b>
+                    @User.Identity.Name
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .panel-title.h4, {
+        font-weight: bold;
+    }
+
+    .panel-title.h6 {
+        font-weight: bold;
+        font-size: 11px;
+    }
+</style>
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" href="#MyRecipes">
+            <h4 class="panel-title h4">
+                <a data-toggle="collapse" href="#MyRecipes">Mina recept</a>
+            </h4>
+        </div>
+        <div id="MyRecipes" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="panel-group" id="accordion">
+                    @{
+                        if (Model.Count() == 0)
+                        {
+                            <h5><i>Det ser tomt ut här.</i></h5>
+                            <a asp-controller="BlogPosts" asp-action="Create">Klicka här för att lägga till recept!</a>
+                        }
+                        else
+                        {
+                            int i = 0;
+                            foreach (var item in Model)
+                            {
+                                i++;
+                                string htmlCollapse = "#collapse" + i;
+                                string htmlCollapseId = "collapse" + i;
+                                string panelID = "panel" + i;
+
+                                <div class="panel panel-default" id="@panelID">
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="@htmlCollapse">
+                                        <div class="panel-title h6">
+                                            @Html.DisplayFor(modelItem => item.HeaderText)
+                                            <p class="pull-right" style="text-align:right">@Html.DisplayFor(modelItem => item.PublishDate)</p>
+                                        </div>
+                                    </div>
+                                    <div id="@htmlCollapseId" class="panel-collapse collapse">
+                                        <div class="panel-body panelBodyText">
+                                            <pre>@Html.DisplayFor(modelItem => item.BodyText)</pre>
+                                        </div>
+                                        <div class="panel-footer">
+                                            <a  asp-controller="BlogPosts" asp-route-categoryName="@item.CategoryName" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-sortOrder="@ViewData["SortOrder"]">
+                                                <div class="w3-btn w3-blue-grey w3-hover-blue">@Html.DisplayFor(modelItem => item.CategoryName)</div>
+                                            </a>
+                                            @if (((User.Identity.Name == item.UserID) || (User.IsInRole("Admin"))) && User.Identity.IsAuthenticated == true)
+                                            {
+                                                <div class="w3-dropdown-hover pull-right w3-right">
+                                                    <button class="w3-btn w3-white w3-border" id="editPostToolsDropDownButton">
+                                                        <span class="glyphicon glyphicon-edit"></span>
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <div class="w3-dropdown-content w3-border w3-right" id="editPostToolsDropDown">
+                                                        <a asp-controller="BlogPosts" asp-action="Edit" asp-route-id="@item.BlogPostID">Redigera</a>
+                                                        <a asp-controller="BlogPosts" asp-action="Delete" asp-route-id="@item.BlogPostID">Ta bort</a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<hr>
+
+<script>
+    $(document).ready(function () {
+        if ($(window).width() <= 340) {
+            $('.panel-title.h4').removeClass("h4").addClass("h6");
+        }
+        else {
+            $('.panel-title.h6').removeClass("h6").addClass("h4");
+        };
+    });
+</script>
