@@ -118,7 +118,7 @@
                         @nullDescription
                         <br />
                         <br />
-                        <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-default btn-xs">Logga in</a>
+                        <a asp-area="" asp-controller="Account" asp-action="Login" asp-route-returnUrl="redirectToCreate" class="btn btn-default btn-xs">Logga in</a>
                         eller <a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-default btn-xs">Registrera dig</a>
                         för att lägga till nya!
                     </p>
@@ -222,7 +222,6 @@
         <script>
             $(document).ready(function () {
                 $('#sortOrderText').text("Nyast först");
-
             });
         </script>
     }
@@ -239,7 +238,6 @@
         <script>
             $(document).ready(function () {
                 $('#viewTypeText').text("Lista");
-
             });
         </script>
     }

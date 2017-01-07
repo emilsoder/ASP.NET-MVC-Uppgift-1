@@ -173,6 +173,10 @@ namespace BlogApplication2.Controllers
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
+            if (returnUrl == "redirectToCreate")
+            {
+                return RedirectToAction(nameof(BlogPostsController.Create), "BlogPosts");
+            }
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);

@@ -47,6 +47,7 @@ namespace BlogApplication2.Data
             {
                 context.Categories.Add(item);
             }
+            var ove = new File[] { };
             context.SaveChanges();
 
 

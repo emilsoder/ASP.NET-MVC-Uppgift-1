@@ -48,7 +48,8 @@
     "System.Linq.Queryable": "4.3.0",
     "System.Linq": "4.3.0",
     "System.Interactive.Async": "3.0.0",
-    "System.Linq.Parallel": "4.3.0"
+    "System.Linq.Parallel": "4.3.0",
+    "MailKit":  "1.10.1"
   },
 
   "tools": {

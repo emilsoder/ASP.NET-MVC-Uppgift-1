@@ -25,5 +25,6 @@ namespace BlogApplication2.Models
         public int BlogPostID { get; set; }
         public string CategoryName { get; set; }
         public string UserID { get; set; }
+        public virtual ICollection<File> Files { get; set; }
     }
 }

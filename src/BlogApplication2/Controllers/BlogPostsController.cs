@@ -8,6 +8,8 @@ using BlogApplication2.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using BlogApplication2.Service;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
 namespace BlogApplication2.Controllers
 {
@@ -20,6 +22,7 @@ namespace BlogApplication2.Controllers
             _context = context;
             _dataService = new BlogPostDataService(_context);
         }
+
         //GET: BlogPosts/Index
         public async Task<IActionResult> Index(string sortOrder, string searchString, string categoryName, string viewType)
         {
@@ -82,7 +85,7 @@ namespace BlogApplication2.Controllers
             return View();
         }
 
-        // POST: BlogPosts/Create
+        //// POST: BlogPosts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BlogPostID,BodyText,CategoryName,HeaderText,PublishDate,UserID")] BlogPost blogPost)
@@ -151,10 +154,6 @@ namespace BlogApplication2.Controllers
             }
             return View(blogPost);
         }
-        private bool BlogPostExists(int id)
-        {
-            return _context.BlogPosts.Any(e => e.BlogPostID == id);
-        }
 
         // GET: BlogPosts/Delete
         [Authorize]
@@ -195,6 +194,10 @@ namespace BlogApplication2.Controllers
                 return true;
             }
             return false;
+        }
+        private bool BlogPostExists(int id)
+        {
+            return _context.BlogPosts.Any(e => e.BlogPostID == id);
         }
 
     }
