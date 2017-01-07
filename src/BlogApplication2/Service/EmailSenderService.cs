@@ -34,7 +34,7 @@ namespace BlogApplication2.Service
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
 
                 await client.ConnectAsync("smtp01.binero.se", 465, true);
-                await client.AuthenticateAsync("kontakt@emilsodergren.se", "Emil1100");
+                await client.AuthenticateAsync("labb@emilsodergren.se", "123qweasd");
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
