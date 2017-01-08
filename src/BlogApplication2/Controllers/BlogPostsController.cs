@@ -6,10 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using BlogApplication2.Data;
 using BlogApplication2.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
 using BlogApplication2.Service;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
 
 namespace BlogApplication2.Controllers
 {
@@ -23,7 +20,7 @@ namespace BlogApplication2.Controllers
             _dataService = new BlogPostDataService(_context);
         }
 
-        //GET: BlogPosts/Index
+        // GET: BlogPosts/Index
         public async Task<IActionResult> Index(string sortOrder, string searchString, string categoryName, string viewType)
         {
             var blogPosts = from s in _context.BlogPosts

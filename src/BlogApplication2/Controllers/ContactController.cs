@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BlogApplication2.Data;
 using BlogApplication2.Models;
-using BlogApplication2.Service;
 using BlogApplication2.Service.EmailServices;
 
 namespace BlogApplication2.Controllers
