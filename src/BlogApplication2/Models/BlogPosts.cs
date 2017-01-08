@@ -8,7 +8,6 @@ namespace BlogApplication2.Models
 {
     public class BlogPost
     {
-
         [Required(AllowEmptyStrings = false, ErrorMessage = "Detta fält är obligatoriskt!")]
         [StringLength(50, ErrorMessage = "Brödtexten måste vara minst 6 och max 2000 tecken långt.", MinimumLength = 4)]
         [Display(Name = "Nytt lösenord")]
@@ -25,6 +24,5 @@ namespace BlogApplication2.Models
         public int BlogPostID { get; set; }
         public string CategoryName { get; set; }
         public string UserID { get; set; }
-        public virtual ICollection<File> Files { get; set; }
     }
 }

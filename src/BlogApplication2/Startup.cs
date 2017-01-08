@@ -18,8 +18,7 @@ namespace BlogApplication2
     {
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
+            var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
@@ -34,45 +33,41 @@ namespace BlogApplication2
 
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BlogRecordsContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            // Add framework services.
-            services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            // BlogRecordsDB connection
+            services.AddDbContext<BlogRecordsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            // InfoServiceDB connection
+            services.AddDbContext<InfoServiceDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("InfoServiceDB")));
+            // Identity connection
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
             services.AddMvc();
 
-            // Configure Identity
+            // Configure User Identity settings
             services.Configure<IdentityOptions>(options =>
             {
-                // Password settings
+                // Override default password requirements
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 4;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = true;
-                
-                // Lockout settings
+
+                // Set lockout parameters. Lockout is activated if user tries "brute-force" to login to an account
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
 
-                // Cookie settings
+                // Cookie settings. The cookies are set to client browser to remember user login details if "Remember me?" button is selected on login page.
                 options.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
                 options.Cookies.ApplicationCookie.LoginPath = "/Account/LogIn";
                 options.Cookies.ApplicationCookie.LogoutPath = "/Account/LogOff";
 
-                // User settings
                 options.User.RequireUniqueEmail = true;
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, BlogRecordsContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -90,14 +85,11 @@ namespace BlogApplication2
             }
 
             app.UseStaticFiles();
-
             app.UseIdentity();
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=BlogPosts}/{action=Index}/{id?}");
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
             });
             DbInitializer.Initialize(context);
         }

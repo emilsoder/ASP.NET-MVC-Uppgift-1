@@ -19,7 +19,7 @@ namespace BlogApplication2.Models
         public string FromEmail { get; set; }
 
         [Display(Name = "Meddelande")]
-        [MinLength(10), MaxLength(1000)]
+        [MinLength(5), MaxLength(1000)]
         [Required(ErrorMessage = "Du måste skriva ett meddelande. Minst 10 och max 1000 tecken långt")]
         public string Message { get; set; }
 

@@ -23,12 +23,7 @@
     <div class="form-group">
         @Html.LabelFor(m => m.FromEmail, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @*@if (User.Identity.IsAuthenticated)
-                    @Html.TextBoxFor(m => m.FromEmail, new { @class = "form-control" })
-                @if (!User.Identity.IsAuthenticated)*@
-
             @Html.TextBoxFor(m => m.FromEmail, new { @class = "form-control" })
-
             @Html.ValidationMessageFor(m => m.FromEmail)
         </div>
     </div>

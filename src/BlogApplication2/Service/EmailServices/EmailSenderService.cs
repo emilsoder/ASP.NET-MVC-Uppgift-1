@@ -1,22 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
-using MailKit.Security;
-using System.Net.Security;
-using System.Net;
+using BlogApplication2.Data;
 
-namespace BlogApplication2.Service
+namespace BlogApplication2.Service.EmailServices
 {
-    public class EmailSenderService
+    
+    public class EmailSenderService : EmailServiceModel
     {
+        private readonly InfoServiceDBContext _context;
+        public EmailSenderService(InfoServiceDBContext context)
+        {
+            _context = context;
+        }
         public async Task SendEmailAsync(string _fromName, string _fromEmail, string _message, string _subject, string _category)
         {
+            GetEmailData(_context);
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_fromName, _fromEmail.Trim()));
-            message.To.Add(new MailboxAddress("Emil Sodergren", "kontakt@emilsodergren.se"));
+            message.To.Add(new MailboxAddress(toName, toEmail));
             message.Subject = _subject;
             message.Date = DateTime.Now;
 
@@ -32,9 +36,8 @@ namespace BlogApplication2.Service
             {
                 client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                await client.ConnectAsync("smtp01.binero.se", 465, true);
-                await client.AuthenticateAsync("labb@emilsodergren.se", "123qweasd");
+                await client.ConnectAsync(smtpDomain, smtpPortNumber, true);
+                await client.AuthenticateAsync(userName, password);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }

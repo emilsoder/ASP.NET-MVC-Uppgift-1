@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BlogApplication2.Models;
 using System.Net;
+using BlogApplication2.Data;
 
 using BlogApplication2.Service;
 
@@ -24,28 +25,6 @@ namespace BlogApplication2.Controllers
             return View();
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Kontakta oss";
-
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Contact(EmailFormModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                EmailSenderService messageService = new EmailSenderService();
-                await messageService.SendEmailAsync(model.FromName, model.FromEmail, model.Message, model.Subject, model.Category);
-                return RedirectToAction("MessageSent");
-            }
-            return View(model);
-        }
-        public ActionResult MessageSent()
-        {
-            return View();
-        }
         public IActionResult Error()
         {
             return View();
