@@ -8,7 +8,7 @@ using BlogApplication2.Data;
 namespace BlogApplication2.Service.EmailServices
 {
     
-    public class EmailSenderService : EmailServiceModel
+    public class EmailSenderService
     {
         private readonly InfoServiceDBContext _context;
         public EmailSenderService(InfoServiceDBContext context)
@@ -17,10 +17,11 @@ namespace BlogApplication2.Service.EmailServices
         }
         public async Task SendEmailAsync(string _fromName, string _fromEmail, string _message, string _subject, string _category)
         {
-            GetEmailData(_context);
+            EmailProviderInformation epi = new EmailProviderInformation();
+            epi.GetEmailData(_context);
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_fromName, _fromEmail.Trim()));
-            message.To.Add(new MailboxAddress(toName, toEmail));
+            message.To.Add(new MailboxAddress(epi.ToName, epi.ToEmail));
             message.Subject = _subject;
             message.Date = DateTime.Now;
 
@@ -36,8 +37,8 @@ namespace BlogApplication2.Service.EmailServices
             {
                 client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                await client.ConnectAsync(smtpDomain, smtpPortNumber, true);
-                await client.AuthenticateAsync(userName, password);
+                await client.ConnectAsync(epi.SmtpDomain, epi.SmtpPortNumber, true);
+                await client.AuthenticateAsync(epi.UserName, epi.Password);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
