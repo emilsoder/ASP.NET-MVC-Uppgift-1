@@ -210,3 +210,41 @@ pre {
     font-family: inherit !important;
     font-size: inherit !important;
 }
+
+#mainMenuListItem:hover {
+    background-color: #2196F3 !important;
+    color: black !important;
+}
+
+.activeBtn a, .activeBtn > a {
+    background-color: #2196F3 !important;
+    color: black !important;
+}
+
+.navbar-inverse {
+    background-color: #565f68 !important;
+}
+
+    .navbar-inverse .navbar-nav > li > a:hover {
+        color: #242424 !important;
+    }
+
+    .navbar-inverse .navbar-nav > li > a, .navbar-brand {
+        color: white;
+    }
+
+    .navbar-inverse .navbar-nav > li > button {
+        color: white !important;
+    }
+
+        .navbar-inverse .navbar-nav > li > button:hover {
+            color: #242424 !important;
+        }
+
+    .navbar-inverse .navbar-brand {
+        color: white;
+    }
+     .navbar-inverse .navbar-brand:hover{
+         background-color:#5d656c;
+        color: black;
+    }

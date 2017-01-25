@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BlogApplication2.Service.BlogPostViewModels
+﻿namespace BlogApplication2.Service.BlogPostViewModels
 {
     public class EmptyCategories
     {

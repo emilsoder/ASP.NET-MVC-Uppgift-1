@@ -36,37 +36,34 @@
 </div>
 <hr />
 <div class="row center-block">
-    <div class="col-lg-3">
+    <div class="col-sm-4">
         <a asp-controller="BlogPosts" asp-action="Index">
-
             <div class="panel panel-default" style="padding:5px 5px">
-                <h4 class="text-center">Matblogg</h4>
+                <h5 class="text-center">Matblogg</h5>
                 <img src="~/Media/Chef .png" class="img-responsive img-circle center-block" />
             </div>
         </a>
     </div>
-    <div class="col-lg-3">
+    <div class="col-sm-4">
         <a asp-controller="Manage" asp-action="Index">
             <div class="panel panel-default" style="padding:5px 5px">
-                <h4 class="text-center">Mina sidor</h4>
+                <h5 class="text-center">Mina sidor</h5>
                 <img src="~/Media/user.png" class="img-responsive img-circle center-block" />
             </div>
         </a>
     </div>
-    <div class="col-lg-3">
-        <a asp-action="About">
+    <div class="col-sm-4">
+        <a asp-controller="Contact" asp-action="Index">
             <div class="panel panel-default" style="padding:5px 5px">
-                <h4 class="text-center">Om oss</h4> 
-                <img src="~/Media/information.png" class="img-responsive img-circle center-block" />
-            </div>
-        </a>
-    </div>
-    <div class="col-lg-3">
-        <a asp-action="Contact">
-            <div class="panel panel-default" style="padding:5px 5px">
-                <h4 class="text-center">Kontakt</h4>
+                <h5 class="text-center">Kontakt</h5>
                 <img src="~/Media/msg.png" class="img-responsive img-circle center-block" />
             </div>
         </a>
     </div>
 </div>
+
+<style>
+    .col-xs-4{
+        float:inline-start;
+    }
+</style>

@@ -20,16 +20,17 @@ namespace BlogApplication2.Controllers
             _dataService = new BlogPostDataService(_context);
         }
 
+        #region Index
         // GET: BlogPosts/Index
         public async Task<IActionResult> Index(string sortOrder, string searchString, string categoryName, string viewType)
         {
             var blogPosts = from s in _context.BlogPosts
                             select s;
 
-            ViewBag.categories = _dataService.GetCategories();
-            ViewBag.AllCategories = _dataService.EmptyCategories();
+            ViewBag.categories = await _dataService.CategoriesCountAsync();
+            ViewBag.AllCategories = await _dataService.EmptyCategoriesAsync();
 
-            ViewBag.AllPostsCount = blogPosts.Count();
+            ViewBag.AllPostsCount = await blogPosts.CountAsync();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -73,12 +74,14 @@ namespace BlogApplication2.Controllers
             }
             return View(await blogPosts.AsNoTracking().ToListAsync());
         }
+        #endregion
 
+        #region Create
         // GET: BlogPosts/Create
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.categories = _dataService.AllCategories();
+            ViewBag.categories = await _dataService.AllCategoriesAsync();
             return View();
         }
 
@@ -98,7 +101,9 @@ namespace BlogApplication2.Controllers
             }
             return View(blogPost);
         }
+        #endregion
 
+        #region Edit
         // GET: BlogPosts/Edit
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
@@ -115,7 +120,7 @@ namespace BlogApplication2.Controllers
                 return RedirectToAction("IllegalOperation", "Home");
             }
 
-            ViewBag.categories = _dataService.AllCategories();
+            ViewBag.categories = await _dataService.AllCategoriesAsync();
             return View(blogPost);
         }
 
@@ -151,7 +156,9 @@ namespace BlogApplication2.Controllers
             }
             return View(blogPost);
         }
+        #endregion
 
+        #region Delete
         // GET: BlogPosts/Delete
         [Authorize]
         public async Task<IActionResult> Delete(int? id, string userID)
@@ -179,7 +186,9 @@ namespace BlogApplication2.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region Helpers
         private bool UserIDEqualsUserName(string _userID)
         {
             if (User.Identity.Name == _userID)
@@ -196,6 +205,6 @@ namespace BlogApplication2.Controllers
         {
             return _context.BlogPosts.Any(e => e.BlogPostID == id);
         }
-
+        #endregion
     }
 }

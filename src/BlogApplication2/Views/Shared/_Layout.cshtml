@@ -18,7 +18,6 @@
     </environment>
 </head>
 <body>
-
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -30,29 +29,31 @@
                 </button>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">foodbyemil</a>
             </div>
-
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Hem</a></li>
-                    <li><a asp-area="" asp-controller="BlogPosts" asp-action="Index">Blogg</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">Om oss</a></li>
-                    <li><a asp-area="" asp-controller="Contact" asp-action="Index">Kontakt</a></li>
+                    <li id="mainMenuListItem" class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "activeBtn" : "")">
+                        <a asp-area="" asp-controller="Home" asp-action="Index">Hem</a>
+                    </li>
+                    <li id="mainMenuListItem" class="@(ViewContext.RouteData.Values["Controller"].ToString() == "BlogPosts" ? "activeBtn" : "")">
+                        <a asp-area="" asp-controller="BlogPosts" asp-action="Index">Blogg</a>
+                    </li>
+                    <li id="mainMenuListItem" class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Contact" ? "activeBtn" : "")">
+                        <a asp-area="" asp-controller="Contact" asp-action="Index">Kontakt</a>
+                    </li>
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </div>
-
     <div class="container body-content">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2016 - foodbyemil</p>
+            <p>&copy; 2017 - foodbyemil</p>
         </footer>
     </div>
-
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>

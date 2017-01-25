@@ -7,6 +7,7 @@ namespace BlogApplication2.Data
     {
         public BlogRecordsContext(DbContextOptions<BlogRecordsContext> options) : base(options)
         {
+            
         }
 
         public DbSet<BlogPost> BlogPosts { get; set; }

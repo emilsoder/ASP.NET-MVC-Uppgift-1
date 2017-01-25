@@ -9,13 +9,6 @@ namespace BlogApplication2.Controllers
             return View();
         }
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Om bloggen foodbyemil";
-
-            return View();
-        }
-
         public IActionResult Error()
         {
             return View();

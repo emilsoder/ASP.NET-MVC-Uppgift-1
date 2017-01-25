@@ -1,7 +1,6 @@
 ﻿@model BlogApplication2.Models.EmailFormModel
 @{
     ViewData["Title"] = "Kontakt";
-    string styles = "width: 280px; border-radius: 4px; border: 1px solid #ccc; height: 34px;";
     string[] _categoryList = { "Förslag", "Buggar", "Affärsintresse", "Övrigt" };
     string frmCtrlStyle = "max-width: 600px; width: 280px; height: 275px;";
     string userName = User.Identity.Name;
@@ -13,44 +12,52 @@
     @Html.AntiForgeryToken()
     <h4>Skicka ett meddelande till oss</h4>
     <hr />
+
     <div class="form-group">
-        @Html.LabelFor(m => m.FromName, new { @class = "col-md-2 control-label" })
+        <label class="col-md-2 control-label">Ditt namn</label>
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.FromName, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.FromName)
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.FromEmail, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.FromEmail, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.FromEmail)
+            <input asp-for="FromName" class="form-control" />
+            <span asp-validation-for="FromName"></span>
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.Category, new { @class = "col-md-2 control-label" })
+        <label class="col-md-2 control-label">Din email</label>
         <div class="col-md-10">
-            @Html.DropDownListFor(m => m.Category, new SelectList(_categoryList), new { @class = "form-control", @style = styles })
-            @Html.ValidationMessageFor(m => m.Category)
+            <input asp-for="FromEmail" class="form-control" />
+            <span asp-validation-for="FromEmail"></span>
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.Subject, new { @class = "col-md-2 control-label" })
+        <label class="col-md-2 control-label">Kategori</label>
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Subject, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Subject)
+            <select asp-for="Category" id="company" class="form-control">
+                @foreach (var item in _categoryList)
+                {
+                    <option>@item</option>
+                }
+            </select>
         </div>
+        <span asp-validation-for="Category"></span>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.Message, new { @class = "col-md-2 control-label" })
+        <label class="col-md-2 control-label">Ämne</label>
         <div class="col-md-10">
-            @Html.TextAreaFor(m => m.Message, new { @class = "form-control", @style = frmCtrlStyle })
-            @Html.ValidationMessageFor(m => m.Message)
+            <input asp-for="Subject" class="form-control" />
+            <span asp-validation-for="Subject"></span>
         </div>
     </div>
+    
+    <div class="form-group">
+        <label class="col-md-2 control-label">Brödtext</label>
+        <div class="col-md-10">
+            <textarea asp-for="Message" class="form-control" style="@frmCtrlStyle"> </textarea>
+            <span asp-validation-for="Message" class="text-danger" />
+        </div>
+    </div>
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" class="btn btn-default" value="Skicka" />
@@ -58,9 +65,37 @@
     </div>
 }
 
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Meddelande
+                <a asp-action="RedirectTo" asp-route-url="contact">
+                    <div type="button" class="close">
+                        &times;
+                    </div>
+                </a>
+            </div>
+            <div class="modal-body">
+                <div class="text-success h4">Meddelandet har skickats! Tack för ditt meddelande.</div>
+            </div>
+            <div class="modal-footer">
+                <a asp-action="RedirectTo" asp-route-url="blog">
+                    <div type="button" class="btn btn-default">
+                        Gå till bloggen
+                    </div>
+                </a>
+                <a asp-action="RedirectTo" asp-route-url="home">
+                    <div type="button" class="btn btn-default">
+                        Gå till startsidan
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {
@@ -80,3 +115,20 @@
         }
     });
 </script>
+
+@if (ViewData["StatusMessage"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            $("#myModal").modal()
+        });
+    </script>
+}
+else
+{
+    return;
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

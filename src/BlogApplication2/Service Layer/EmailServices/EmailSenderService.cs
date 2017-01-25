@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
 using BlogApplication2.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogApplication2.Service.EmailServices
 {
-    
     public class EmailSenderService
     {
         private readonly InfoServiceDBContext _context;
@@ -15,10 +15,11 @@ namespace BlogApplication2.Service.EmailServices
         {
             _context = context;
         }
+
         public async Task SendEmailAsync(string _fromName, string _fromEmail, string _message, string _subject, string _category)
         {
-            EmailProviderInformation epi = new EmailProviderInformation();
-            epi.GetEmailData(_context);
+            var epi = await EmailProviderAsync();
+
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_fromName, _fromEmail.Trim()));
             message.To.Add(new MailboxAddress(epi.ToName, epi.ToEmail));
@@ -27,10 +28,8 @@ namespace BlogApplication2.Service.EmailServices
 
             message.Body = new TextPart("plain")
             {
-                Text = ""
-                + "Category: \n" + _category
-                + "\n\n"
-                + "Message: \n" + _message
+                Text = "Category: \n" + _category
+                + "\n\n" + "Message: \n" + _message
             };
 
             using (var client = new SmtpClient())
@@ -42,6 +41,14 @@ namespace BlogApplication2.Service.EmailServices
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
+        }
+
+        public async Task<EmailProviderInformation> EmailProviderAsync()
+        {
+            var query = from obj in _context.EmailProviderInformation
+                        select obj;
+            EmailProviderInformation epiObject = await query.SingleOrDefaultAsync();
+            return epiObject;
         }
     }
 }

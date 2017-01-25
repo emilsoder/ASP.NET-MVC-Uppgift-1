@@ -8,6 +8,8 @@ using BlogApplication2.Models;
 using BlogApplication2.Models.ManageViewModels;
 using BlogApplication2.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using BlogApplication2.Models.ViewModels.ManageViewModels;
 
 namespace BlogApplication2.Controllers
 {
@@ -25,6 +27,33 @@ namespace BlogApplication2.Controllers
             _signInManager = signInManager;
             _logger = loggerFactory.CreateLogger<ManageController>();
             _context = cx;
+        }
+
+        public async Task<IList<UsersInRoleViewModel>> UsersInRole()
+        {
+            IList<UsersInRoleViewModel> AllUsersList = new List<UsersInRoleViewModel>();
+
+            foreach (var item in from y in _userManager.Users select y)
+            {
+                bool _isUserInRole = await _userManager.IsInRoleAsync(item, "Admin");
+                if (!_isUserInRole)
+                {
+                    AllUsersList.Add(new UsersInRoleViewModel
+                    {
+                        UserName = item.UserName,
+                        Role = "None"
+                    });
+                }
+                else
+                {
+                    AllUsersList.Add(new UsersInRoleViewModel
+                    {
+                        UserName = item.UserName,
+                        Role = "Admin"
+                    });
+                }
+            }
+            return AllUsersList;
         }
 
         // GET: /Manage/Index
@@ -58,10 +87,13 @@ namespace BlogApplication2.Controllers
             var blogPosts = from s in _context.BlogPosts
                             where s.UserID == user
                             select s;
-
+            if (User.IsInRole("Admin"))
+            {
+                ViewBag.UsersInRole = await UsersInRole();
+            }
             return View(await blogPosts.AsNoTracking().ToListAsync());
         }
-       
+
         // GET: /Manage/ChangePassword
         [HttpGet]
         public IActionResult ChangePassword()
@@ -88,6 +120,7 @@ namespace BlogApplication2.Controllers
                     _logger.LogInformation(3, "User changed their password successfully.");
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
                 }
+
                 AddErrors(result);
                 return View(model);
             }

@@ -1,0 +1,42 @@
+@model IEnumerable<BlogApplication2.Models.BlogPost>
+
+@foreach (var item in Model)
+{
+    string formattedDate = item.PublishDate.ToString("dd MMM yyyy");
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+
+            <div class="row" id="HeaderRow">
+                <div class="col-xs-8">
+                    @item.HeaderText
+                </div>
+                <div class="col-xs-4">
+                    @formattedDate
+                </div>
+            </div>
+        </div>
+        <div class="panel-body panelBodyText">
+            <pre>@item.BodyText</pre>
+        </div>
+        <div class="panel-footer">
+            <a asp-action="Index" asp-route-categoryName="@item.CategoryName" asp-route-viewType="@ViewData["DisplayResultsAs"]" asp-route-sortOrder="@ViewData["SortOrder"]">
+                <div class="w3-btn w3-blue-grey w3-hover-blue">@item.CategoryName</div>
+            </a>
+            @if (((User.Identity.Name == item.UserID) || (User.IsInRole("Admin"))) && User.Identity.IsAuthenticated == true)
+            {
+                <div class="w3-dropdown-hover pull-right w3-right">
+                    <button class="w3-btn w3-white w3-border" id="editPostToolsDropDownButton">
+                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <div class="w3-dropdown-content w3-border w3-right" id="editPostToolsDropDown">
+                        <a asp-action="Edit" asp-route-id="@item.BlogPostID">Redigera</a>
+                        <a asp-action="Delete" asp-route-id="@item.BlogPostID">Ta bort</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <hr />
+}

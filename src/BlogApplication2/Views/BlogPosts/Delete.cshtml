@@ -12,19 +12,19 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            Namn
+            Rubrik
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.HeaderText)
+            @Model.HeaderText
         </dd>
         <dt>
             Kategori
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.CategoryName)
+            @Model.CategoryName
         </dd>
         <dt>
-            Publicerad
+            Publicerad, datum
         </dt>
         <dd>
             @date
@@ -34,7 +34,7 @@
     <form asp-action="Delete">
         <div class="form-actions no-color">
             <input type="submit" value="Ta bort" class="btn btn-danger" /> |
-            <a asp-action="Index">Avbryt</a>
+            <a asp-action="Index" class="btn btn-default">Avbryt</a>
         </div>
     </form>
 </div>
